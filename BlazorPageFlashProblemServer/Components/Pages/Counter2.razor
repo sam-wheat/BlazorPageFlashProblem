@@ -1,0 +1,30 @@
+﻿@page "/counter2/{randomNumber}"
+<PageTitle>Counter2</PageTitle>
+
+<div style="display:flex;flex-direction:column">
+
+    @foreach (int i in numbers)
+    {
+        int tmp = i;  // not a closure problem
+        <button onclick="@(() => IncrementCount(tmp))">@i</button>    
+    }
+</div>
+
+@code {
+    [Parameter] public string randomNumber { get; set; }
+    [Inject] protected NavigationManager NavigationManager { get; set; }
+    private List<int> numbers { get; set; }
+    Random rnd = new Random();
+
+    protected override async Task OnInitializedAsync()
+    {
+        numbers = new List<int> { rnd.Next(0, 10000), rnd.Next(0, 10000), rnd.Next(0, 10000) };
+    }
+
+
+    private async Task IncrementCount(int c)
+    {
+        NavigationManager.NavigateTo($"/counter2/{c}", true);     // Navigates
+        //NavigationManager.NavigateTo($"/counter2/{c}", false);      // Does not navigate
+    }
+}
